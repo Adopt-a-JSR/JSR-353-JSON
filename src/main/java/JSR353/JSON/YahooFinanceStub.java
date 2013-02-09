@@ -1,12 +1,8 @@
 package JSR353.JSON;
+
 import java.io.File;
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,11 +18,14 @@ public class YahooFinanceStub implements Runnable {
 	private String[] symbols = new String[] {"GOOG", "MSFT", "YHOO", "IBM"};
 	
 	boolean stopRunning = false;
+	boolean doNotRunWriteJSONObjectToStreamOnlyOnce = true; // enable this flag to execute this implementation!
+	boolean doNotRunWriteJSONObjectToConsoleOnlyOnce = true; // enable this flag to execute this implementation!
+	// enabling the above will prevent other implementations that write to stream/console multiple times from working! 
 	
 	@Override
 	public void run() {
 		// Poll yahoo - generate random price for the moment
-		// <-code to poll Yahoo->
+		// ToDO: <-code to poll Yahoo->
 
 		// Simulate real-time prices
 		while( !stopRunning ) {
@@ -38,35 +37,45 @@ public class YahooFinanceStub implements Runnable {
 			String symbol = pricesCacheStore.getLastSymbolUpdated();
 			Double price = pricesCacheStore.getPrice(symbol);
 			
-			// print it to console			
-
-		    //writeJSONObjectToConsoleOnlyOnce(symbol, price);
-		    //System.out.println(getJSONObjectFromValues(symbol, price));
-			
+			// print it to console				
+			// Implementation of JsonGenerator and Json in JSR-353
+		    // Note that you can write to a stream only once - hence running only once! 
+			writeJSONObjectToConsoleOnlyOnce(symbol, price);
+						
+			// Implementation of JsonWriter & JsonReader in JSR-353
 			/*
 			 * Writes/Reads the specified JSON object or array to the output source.
-			 * This method needs to be called only once for a reader/writer instance. Hence killing thread.
+			 * This method needs to be called only once for a reader/writer instance - hence running only once.
 			 */
 			writeJSONObjectToStreamOnlyOnce(symbol, price);
 
-		    // Uncomment the below to test this method - but yo 
-			//writeJSONObjectToConsoleOnlyOnce(symbol, price);
-		    
-		    //System.out.println(getJSONObjectFromValues(symbol, price));
-
+			// Implementation of JsonObject & JsonObjectBuilder in JSR-353
+			// Returns a Json object with a symbol and price - continuously
+		    System.out.println(getJSONObjectFromValues(symbol, price));
 			
 			// Then pause for a bit...before starting all over again
-			try {
-				Thread.sleep(1000);
-				
-			} catch (InterruptedException ex) {
-				throw new RuntimeException( ex );
-			}
+			pauseForABit(1000);
 		}
 	}
 	
-	// Implementation of JsonGenerator and Json in JSR-353
+	public void pauseForABit(int milliSecsToWait) {
+		try {
+			Thread.sleep(milliSecsToWait);
+			
+		} catch (InterruptedException ex) {
+			throw new RuntimeException( ex );
+		}	
+	}
+	
+	/*
+	 * Method to write to console only once.
+	 */
 	private void writeJSONObjectToConsoleOnlyOnce(String symbol, Double price) {
+		if (doNotRunWriteJSONObjectToConsoleOnlyOnce) return;
+		doNotRunWriteJSONObjectToConsoleOnlyOnce = true;
+		
+		pauseForABit(1000);
+		
 		JsonGenerator generator = Json.createGenerator(System.out);
 			generator
 				.writeStartObject() 
@@ -77,15 +86,22 @@ public class YahooFinanceStub implements Runnable {
 			generator.close();
 	}
 	
-	// Write it to stream only once.
+	/*
+	 * Method to write to stream only once.
+	 */
 	private void writeJSONObjectToStreamOnlyOnce(String symbol, Double price) {
+		if (doNotRunWriteJSONObjectToStreamOnlyOnce) return;
+		doNotRunWriteJSONObjectToStreamOnlyOnce = true;
+
+		pauseForABit(1000);
+
 		writeJsonObj(getJSONObjectFromValues(symbol, price));
 		readJsonObj(getFileInputStream());
-		stopRunning = true;
 	}
-	
-	// Implementation of JsonGenerator and Json in JSR-353
-	// Implementation of JsonObject & JsonObjectBuilder in JSR-353
+		
+	/*
+	 * Function to return a JsonObject
+	 */
 	private JsonObject getJSONObjectFromValues(String symbol, Double price) {
 		JsonObject value = new JsonObjectBuilder()
 			.add("symbol", symbol)
@@ -94,7 +110,9 @@ public class YahooFinanceStub implements Runnable {
 		return value;
 	}
 	
-	
+	/*
+	 * Method to get output stream for a file.
+	 */
 	public String getRandomSymbol() {
 		String symbol = "";
 		if ((symbols != null) && (symbols.length > 0)) {
@@ -105,6 +123,10 @@ public class YahooFinanceStub implements Runnable {
 		}
 		return symbol;
 	}
+	
+	/*
+	 * Function to return all prices stored in PricesCachseStore - immutable, singleton 
+	 */	
 	public ConcurrentHashMap<String, Double> getAllPrices() {
 		return PricesCacheStore.getInstance().getAllPrices();
 	}
@@ -117,6 +139,9 @@ public class YahooFinanceStub implements Runnable {
 		yahooPricesThread.start();		
 	}
  
+	/*
+	 * Function to return a randomized price.
+	 */
 	static private Double getRandomPrice() {
 		Random rand = new Random();
 		return rand.nextDouble() * 100;
@@ -178,6 +203,4 @@ public class YahooFinanceStub implements Runnable {
 		JsonObject jsonObject = jsonReader.readObject();
 		System.out.println(jsonObject);
 	}
-	
-	
 }
