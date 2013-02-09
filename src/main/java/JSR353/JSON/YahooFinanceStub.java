@@ -1,17 +1,25 @@
 package JSR353.JSON;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.json.*;
-import javax.json.stream.*;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
+import javax.json.JsonWriter;
+import javax.json.stream.JsonGenerator;
 
 public class YahooFinanceStub implements Runnable {
 
 	private String[] symbols = new String[] {"GOOG", "MSFT", "YHOO", "IBM"};
 	
+	boolean stopRunning = false;
+	
 	@Override
 	public void run() {
-		boolean stopRunning = false;
 		// Poll yahoo - generate random price for the moment
 		// <-code to poll Yahoo->
 
@@ -27,7 +35,13 @@ public class YahooFinanceStub implements Runnable {
 			
 			// print it to console			
 		    //writeJSONObjectToConsoleOnlyOnce(symbol, price);
-		    System.out.println(getJSONObjectFromValues(symbol, price));
+		    //System.out.println(getJSONObjectFromValues(symbol, price));
+			
+			/*
+			 * Writes/Reads the specified JSON object or array to the output source.
+			 * This method needs to be called only once for a reader/writer instance. Hence killing thread.
+			 */
+			writeJSONObjectToStreamOnlyOnce(symbol, price);
 			
 			// Then pause for a bit...before starting all over again
 			try {
@@ -53,6 +67,13 @@ public class YahooFinanceStub implements Runnable {
 			
 			generator.close();
 		}
+	}
+	
+	// 
+	private void writeJSONObjectToStreamOnlyOnce(String symbol, Double price) {
+		writeJsonObj(getJSONObjectFromValues(symbol, price));
+		readJsonObj(getFileInputStream());
+		stopRunning = true;
 	}
 	
 	// Implementation of JsonGenerator and Json in JSR-353
@@ -103,4 +124,63 @@ public class YahooFinanceStub implements Runnable {
 		Random rand = new Random();
 		return rand.nextDouble() * 100;
 	}
+	
+
+	private static FileOutputStream outputStream = null;
+	private static FileInputStream inputStream = null;
+	
+	/*
+	 * Method to get output stream for a file.
+	 */
+	public static FileOutputStream getFileOutputStream() {
+		try {
+			if (outputStream == null) {
+				outputStream =  new FileOutputStream(new File("jsr353.txt"));
+			} else {
+				return outputStream;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return outputStream;
+	}
+
+	/*
+	 * Method to get input stream for a file.
+	 */
+	public static FileInputStream getFileInputStream() {
+		try {
+			if (inputStream == null) {
+				inputStream =  new FileInputStream(new File("jsr353.txt"));
+			} else {
+				return inputStream;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return inputStream;
+	}
+	
+	/*
+	 * Method to write JsonObj to a given output stream.
+	 */
+	public static void writeJsonObj(JsonObject jsonObject) {
+		 JsonWriter jsonWriter = new JsonWriter(getFileOutputStream());
+		 System.out.println("JSR 353 - Write Object: ");
+		 jsonWriter.writeObject(jsonObject);
+		 System.out.println(jsonObject);
+		 jsonWriter.close();
+	}
+	
+	/*
+	 * Method to write JsonObj from a given output stream.
+	 */
+	public static void readJsonObj(FileInputStream stream) {
+		JsonReader jsonReader = new JsonReader(stream);
+		System.out.println("JSR 353 - Read Object: ");
+		JsonObject jsonObject = jsonReader.readObject();
+		System.out.println(jsonObject);
+	}
+	
+	
 }
