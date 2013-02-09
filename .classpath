@@ -32,8 +32,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/saiubuntu/WebSocket &amp; JSON Hackday/JsrJars/javax.json-1.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/saiubuntu/WebSocket &amp; JSON Hackday/JsrJars/javax.websocket-api-1.0-b11.jar"/>
-	<classpathentry kind="lib" path="/home/saiubuntu/WebSocket &amp; JSON Hackday/JsrJars/tyrus-websocket-core-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

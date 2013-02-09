@@ -27,11 +27,11 @@
 		</plugins>
 	</build>
 
-	<!-- dependencies>
+	<dependencies>
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
 			<version>7.0-b72</version>
 		</dependency>
-	</dependencies --> 
+	</dependencies> 
 </project>
