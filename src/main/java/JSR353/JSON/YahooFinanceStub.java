@@ -23,9 +23,11 @@ public class YahooFinanceStub implements Runnable {
 			
 			// get the last symbol updated
 			String symbol = pricesCacheStore.getLastSymbolUpdated();
+			Double price = pricesCacheStore.getPrice(symbol);
 			
 			// print it to console			
-		    writeJSONObjectToConsoleOnlyOnce(symbol, pricesCacheStore.getPrice(symbol));
+		    //writeJSONObjectToConsoleOnlyOnce(symbol, price);
+		    System.out.println(getJSONObjectFromValues(symbol, price));
 			
 			// Then pause for a bit...before starting all over again
 			try {
@@ -39,7 +41,7 @@ public class YahooFinanceStub implements Runnable {
 		}
 	}
 	
-	// Implementation of JsonGenerator in JSR-353
+	// Implementation of JsonGenerator and Json in JSR-353
 	private void writeJSONObjectToConsoleOnlyOnce(String symbol, Double price) {
 		JsonGenerator generator = Json.createGenerator(System.out);
 		if (generator != null) {	
@@ -53,8 +55,13 @@ public class YahooFinanceStub implements Runnable {
 		}
 	}
 	
-	private void writeJSONObjectToConsoleRepeatedly(String symbol, Double price) {
-		//JsonObject value = Json.createReader(inputStream).readObject();
+	// Implementation of JsonGenerator and Json in JSR-353
+	private JsonObject getJSONObjectFromValues(String symbol, Double price) {
+		JsonObject value = new JsonObjectBuilder()
+			.add("symbol", symbol)
+			.add("price", price)
+			.build();
+		return value;
 	}
 	
 	// Implementation of JsonObject & Json.createObjectBuilder in JSR-353
