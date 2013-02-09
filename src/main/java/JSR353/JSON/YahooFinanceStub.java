@@ -1,4 +1,11 @@
 package JSR353.JSON;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,15 +33,15 @@ public class YahooFinanceStub implements Runnable {
 			Double price = pricesCacheStore.getPrice(symbol);
 			
 			// print it to console			
-		    //writeJSONObjectToConsoleOnlyOnce(symbol, price);
-		    System.out.println(getJSONObjectFromValues(symbol, price));
+		    // Uncomment the below to test this method - but yo 
+			writeJSONObjectToConsoleOnlyOnce(symbol, price);
+		    
+		    //System.out.println(getJSONObjectFromValues(symbol, price));
 			
 			// Then pause for a bit...before starting all over again
 			try {
 				Thread.sleep(1000);
 				
-				// if user types a key in the console, then stop running!
-				//if ( readUserInput() != "" ) stopRunning = true; 
 			} catch (InterruptedException ex) {
 				throw new RuntimeException( ex );
 			}
@@ -44,7 +51,6 @@ public class YahooFinanceStub implements Runnable {
 	// Implementation of JsonGenerator and Json in JSR-353
 	private void writeJSONObjectToConsoleOnlyOnce(String symbol, Double price) {
 		JsonGenerator generator = Json.createGenerator(System.out);
-		if (generator != null) {	
 			generator
 				.writeStartObject() 
 					.write("symbol", symbol)
@@ -52,10 +58,9 @@ public class YahooFinanceStub implements Runnable {
 				.writeEnd();			
 			
 			generator.close();
-		}
 	}
 	
-	// Implementation of JsonGenerator and Json in JSR-353
+	// Implementation of JsonObject & JsonObjectBuilder in JSR-353
 	private JsonObject getJSONObjectFromValues(String symbol, Double price) {
 		JsonObject value = new JsonObjectBuilder()
 			.add("symbol", symbol)
@@ -64,18 +69,6 @@ public class YahooFinanceStub implements Runnable {
 		return value;
 	}
 	
-	// Implementation of JsonObject & Json.createObjectBuilder in JSR-353
-	private JsonObject getJSONObject(String symbol, Double price) {
-	     /*	JsonObject value = Json.createObjectBuilder()
-			//.add("quotes") 
-				.add("symbol", symbol)
-				.add("price", price)
-			.build();
-			*/
-		JsonObject value = null;
-		return value;
-	}
-		
 	
 	public String getRandomSymbol() {
 		String symbol = "";
