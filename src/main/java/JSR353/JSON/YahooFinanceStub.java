@@ -202,5 +202,6 @@ public class YahooFinanceStub implements Runnable {
 		System.out.println("JSR 353 - Read Object: ");
 		JsonObject jsonObject = jsonReader.readObject();
 		System.out.println(jsonObject);
+		jsonReader.close();
 	}
 }
