@@ -16,12 +16,12 @@ public class PricesCacheStore {
 		return INSTANCE; 
 	}
 	
-	public synchronized void addPrice(String symbol, Double price) {
+	public void addPrice(String symbol, Double price) {
 		pricesCache.put(symbol, price);
 		lastSymboleUpdated = symbol; 
 	}
 	
-	public synchronized Double getPrice(String symbol) {
+	public Double getPrice(String symbol) {
 		Double price = pricesCache.get(symbol);
 		return price == null ? 0 : price;
 	}
@@ -29,7 +29,7 @@ public class PricesCacheStore {
 	// Keep in mind immutability - return a copy of the object
 	// does not matter if it is static or volatile
 	// or if its threading is safe
-	public synchronized ConcurrentHashMap<String, Double> getAllPrices() {		
+	public ConcurrentHashMap<String, Double> getAllPrices() {		
 		return new ConcurrentHashMap<String, Double>(pricesCache);
 	}
 	
