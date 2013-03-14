@@ -2,37 +2,37 @@ package JSR353.JSON;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public class PricesCacheStore {
+public enum PricesCacheStore {
 
-	private final static PricesCacheStore INSTANCE = new PricesCacheStore();	
-	
-	private PricesCacheStore() {}
+	INSTANCE;
+
 	private volatile String lastSymboleUpdated;
-	
-	// will contain Symbols and prices stored and constantly updated	
-	private volatile ConcurrentHashMap<String, Double> pricesCache = new ConcurrentHashMap<>(); 
-	
-	public static PricesCacheStore getInstance() {
-		return INSTANCE; 
-	}
-	
+
+	// will contain Symbols and prices stored and constantly updated
+	private volatile ConcurrentHashMap<String, Double> pricesCache = new ConcurrentHashMap<>();
+
 	public void addPrice(String symbol, Double price) {
-		pricesCache.put(symbol, price);
-		lastSymboleUpdated = symbol; 
+		if (symbol != null && price != null) {
+		    pricesCache.put(symbol, price);
+		    lastSymboleUpdated = symbol;
+		}
 	}
-	
+
 	public Double getPrice(String symbol) {
+		if (symbol == null) {
+			return 0d;
+		}
 		Double price = pricesCache.get(symbol);
-		return price == null ? 0 : price;
+		return price == null ? 0d : price;
 	}
-	
+
 	// Keep in mind immutability - return a copy of the object
 	// does not matter if it is static or volatile
 	// or if its threading is safe
-	public ConcurrentHashMap<String, Double> getAllPrices() {		
+	public ConcurrentHashMap<String, Double> getAllPrices() {
 		return new ConcurrentHashMap<String, Double>(pricesCache);
 	}
-	
+
 	public String getLastSymbolUpdated() {
 		return new String(lastSymboleUpdated);
 	}
