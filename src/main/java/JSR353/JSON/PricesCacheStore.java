@@ -26,11 +26,9 @@ public enum PricesCacheStore {
 		return price == null ? 0d : price;
 	}
 
-	// Keep in mind immutability - return a copy of the object
-	// does not matter if it is static or volatile
-	// or if its threading is safe
+	// Object is threading is safe so can be returned as it is
 	public ConcurrentHashMap<String, Double> getAllPrices() {
-		return new ConcurrentHashMap<String, Double>(pricesCache);
+		return pricesCache;
 	}
 
 	public String getLastSymbolUpdated() {
