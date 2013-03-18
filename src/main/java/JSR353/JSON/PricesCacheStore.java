@@ -6,15 +6,15 @@ public enum PricesCacheStore {
 
 	INSTANCE;
 
-	private volatile String lastSymboleUpdated;
+	private volatile String lastSymbolUpdated;
 
 	// will contain Symbols and prices stored and constantly updated
-	private volatile ConcurrentHashMap<String, Double> pricesCache = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String, Double> pricesCache = new ConcurrentHashMap<>();
 
 	public void addPrice(String symbol, Double price) {
 		if (symbol != null && price != null) {
 		    pricesCache.put(symbol, price);
-		    lastSymboleUpdated = symbol;
+		    lastSymbolUpdated = symbol;
 		}
 	}
 
@@ -34,6 +34,6 @@ public enum PricesCacheStore {
 	}
 
 	public String getLastSymbolUpdated() {
-		return new String(lastSymboleUpdated);
+		return new String(lastSymbolUpdated);
 	}
 }
