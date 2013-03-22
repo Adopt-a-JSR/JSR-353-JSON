@@ -10,3 +10,4 @@
 .*
 !/.gitignore
 target/
+JSR-353-JSON/target/

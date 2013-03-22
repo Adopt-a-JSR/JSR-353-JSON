@@ -6,8 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(value = Suite.class)
 @SuiteClasses(value = {
-    PricesCacheStoreTest.class,
-    YahooFinanceStubTest.class
+    PricesCacheStoreTest.class
 })
 public class AllTests {
 
