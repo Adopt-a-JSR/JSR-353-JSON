@@ -29,15 +29,28 @@
 
 	<dependencies>
 		<dependency>
+<<<<<<< HEAD
+=======
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+>>>>>>> 6c725f7e39326df8e821fa77cf2b6da70ad80f99
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.json</artifactId>
 			<version>1.0-b02</version>
 		</dependency>
+<<<<<<< HEAD
 		
 		<!-- <dependency> 
 		     <groupId>javax</groupId> 
 		     <artifactId>javaee-api</artifactId> 
 			 <version>7.0-b72</version> 
 	    </dependency> -->
+=======
+>>>>>>> 6c725f7e39326df8e821fa77cf2b6da70ad80f99
 	</dependencies>
 </project>
