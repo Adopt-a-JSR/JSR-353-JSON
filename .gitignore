@@ -1,3 +1,5 @@
+/JSR-353-JSON/target/
+
 *.class
 
 # Package Files #
@@ -10,4 +12,3 @@
 .*
 !/.gitignore
 target/
-JSR-353-JSON/target/
