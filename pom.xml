@@ -34,8 +34,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <modelVersion>4.0.0</modelVersion>
-        <groupId>YahooFinanceStub</groupId>
-        <artifactId>YahooFinanceStub</artifactId>
+        <groupId>org.adoptajsr</groupId>
+        <artifactId>yahoo-finance-stub</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <name>YahooFinanceStub</name>
         <description>Stub to generate prices and store in the cache!</description>
